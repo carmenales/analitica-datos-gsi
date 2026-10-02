@@ -90,7 +90,39 @@ En convocatorias unificadas, la Comisión Permanente de Selección asigna los as
 
 ---
 
-## 5. Hallazgos Clave para el Opositor de Ingreso Libre
+## 5. Progresión y Criba Detallada por Ejercicio (2018 y 2019)
+
+En las convocatorias donde los ejercicios se realizaron en jornadas independientes y separadas por meses, se dispone del desglose completo de la criba paso a paso:
+
+| Convocatoria | Presentados 1º Ej | Superan 1º Ej (Test) | % Aprob. 1º | Caen en 1º Ej | Abandono Inter-Examen | Presentados 2º Ej | Superan 2º Ej (Práctico) | % Aprob. 2º | Caen en 2º Ej | Aprobados Proceso |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| **2018** | 1.027 | 500 | 48.69% | 527 (51.31%) | **150 (30.00%)** | 350 | 144 | 41.14% | 206 (58.86%) | **144** |
+| **2019** | 719 | 350 | 48.68% | 369 (51.32%) | **89 (25.43%)** | 261 | 143 | 54.79% | 118 (45.21%) | **143** |
+
+### Conclusiones sobre la Criba por Ejercicio:
+1. **La criba del test es constante:** En ambas convocatorias, exactamente el **51.3% de los presentados suspendió el primer ejercicio tipo test**.
+2. **El fenómeno del abandono entre exámenes:** Entre el **25% y el 30%** de los aspirantes que superaron el test **nunca llegaron a presentarse al segundo examen** (caso práctico), habitualmente por falta de preparación de la parte de desarrollo/práctica.
+3. **El impacto del modelo de Examen Único (2022 y 2024):** Al unificar test y supuesto práctico en un único día, el INAP eliminó este absentismo intermedio, lo que elevó la tasa de éxito final sobre presentados al 25.9% en 2022 y al 39.7% en 2024.
+
+---
+
+## 6. Balance Histórico Acumulado: El Destino de los Candidatos (2018-2024)
+
+Analizando las **8.580 solicitudes** totales de Ingreso Libre en las 4 convocatorias:
+
+| Destino del Aspirante | Total Personas | % sobre Solicitudes | % sobre Presentados |
+|:---|:---:|:---:|:---:|
+| **1. No se presentan al examen (Absentismo previo)** | **4.582** | **53.40%** | — |
+| **2. Se presentan pero suspenden/caen en las pruebas** | **2.985** | **34.79%** | **74.66%** |
+| **3. Superan el proceso y obtienen plaza fija** | **1.013** | **11.81%** | **25.34%** |
+| **TOTAL SOLICITUDES** | **8.580** | **100.0%** | — |
+
+> [!TIP]
+> De cada 100 personas que echan la instancia en Ingreso Libre: **53 nunca van al examen**, **35 van y suspenden**, y **12 consiguen la plaza**. Pero de cada 100 personas que efectivamente se sientan en el examen, **25 obtienen plaza de funcionario**.
+
+---
+
+## 7. Hallazgos Clave para el Opositor de Ingreso Libre
 
 1. **La Competencia Real es de 1 a 1:**
    - La competencia real se ha reducido drásticamente: de 4.71 presentados/plaza en 2018 a solo **1.04 en 2024**.
@@ -98,16 +130,26 @@ En convocatorias unificadas, la Comisión Permanente de Selección asigna los as
    - En 2024, a pesar de haber 1.033 personas examinándose para 995 plazas, quedaron **585 plazas desiertas**.
    - El motivo: los aspirantes no superan la nota mínima de corte legal (50% de la puntuación). Quien supera el corte obtiene plaza.
 3. **El Efecto Filtro del Absentismo:**
-   - Cerca del 50-58% de las personas inscritas no acuden al aula el día del examen.
+   - Más del 50% (53.4% histórico) de las personas inscritas no acuden al aula el día del examen.
 
 ---
 
-## 6. Archivos y Recursos en el Repositorio
+## 8. Archivos y Recursos en el Repositorio
 
-- `analisis_gsi.py`: Script Python modular que carga los CSVs y genera los 7 gráficos.
-- `analisis_oposiciones_gsi_age.ipynb`: Cuaderno Jupyter interactivo completamente ejecutado.
+- `analisis_gsi.py`: Script Python modular que carga los CSVs y genera los 9 gráficos.
+- `analisis_oposiciones_gsi_age.ipynb`: Cuaderno Jupyter interactivo completamente ejecutado con todos los gráficos y tablas.
 - `gsi_datos_completos.csv`: Dataset maestro con el histórico auditado 2018-2024.
 - `gsi_ingreso_libre_analisis.csv`: Dataset enfocado en Ingreso Libre.
 - `gsi_promocion_interna_analisis.csv`: Dataset enfocado en Promoción Interna.
 - `gsi_oep_desglose_acumuladas.csv`: Desglose detallado de OEPs acumuladas.
-- `01_tasa_exito.png` a `07_ingreso_libre_oeps_acumuladas.png`: Gráficos generados en alta resolución.
+- `analisis_gsi_completo_actualizado.xlsx`: Libro Excel con todas las hojas sincronizadas.
+- Gráficos generados en alta resolución:
+  - `01_tasa_exito.png`: Tasa de Éxito global (Libre vs Promo).
+  - `02_competitividad.png`: Solicitudes/Plaza vs Presentados/Plaza reales.
+  - `03_plazas_vs_aprobados.png`: Plazas Cubiertas vs Desiertas y Cobertura %.
+  - `04_embudo_conversion.png`: Embudo de conversión por fases.
+  - `05_tasa_presentacion.png`: Tasa de Presentación vs Absentismo.
+  - `06_ingreso_libre_general_vs_discapacidad.png`: Cobertura General vs Discapacidad.
+  - `07_ingreso_libre_oeps_acumuladas.png`: Asignación de plazas por año de OEP.
+  - `08_ingreso_libre_criba_por_ejercicio.png`: Criba ejercicio a ejercicio y abandono inter-examen.
+  - `09_ingreso_libre_destino_candidatos_historico.png`: Destino de los aspirantes por convocatoria e histórico global.
