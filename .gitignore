@@ -1,0 +1,15 @@
+# Environment files
+.env
+.env.*
+.envs/
+venv/
+.venv/
+*.venv
+
+# Cache / build artifacts
+cache/
+__pycache__/
+.llm_cache/
+
+# Temporary files  
+~$*.xlsx
