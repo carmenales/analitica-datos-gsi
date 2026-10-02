@@ -39,6 +39,7 @@ for d in [df_libre, df_promo]:
     d['tasa_exito_global'] = (d['superan_proceso_total'] / d['presentados_1ej_total'] * 100).round(2)
     d['tasa_cobertura'] = (d['superan_proceso_total'] / d['plazas_totales'] * 100).round(2)
     d['plazas_desiertas'] = d['plazas_totales'] - d['superan_proceso_total']
+    d['pct_desiertas'] = (d['plazas_desiertas'] / d['plazas_totales'] * 100).round(2)
     d['ratio_solicitudes_plaza'] = (d['solicitudes_total'] / d['plazas_totales']).round(2)
     d['ratio_presentados_plaza'] = (d['presentados_1ej_total'] / d['plazas_totales']).round(2)
 
@@ -155,7 +156,7 @@ def plot_stacked_cobertura(ax, df_sub, titulo, color_cubiertas='#2A9D8F', color_
             ax.text(i, cubiertas[i]/2, f'{cubiertas[i]}', ha='center', va='center', color='white', fontweight='bold', fontsize=10)
         if desiertas[i] > 40:
             ax.text(i, cubiertas[i] + desiertas[i]/2, f'{desiertas[i]}', ha='center', va='center', color='white', fontweight='bold', fontsize=10)
-        ax.text(i, plazas[i] + (max(plazas)*0.03), f'Total: {plazas[i]}\n({cobertura[i]:.1f}% cubiertas)',
+        ax.text(i, plazas[i] + (max(plazas)*0.03), f'Total: {plazas[i]}\n({cobertura[i]:.1f}% cubiertas\n{100-cobertura[i]:.1f}% desiertas)',
                 ha='center', va='bottom', fontsize=9, fontweight='bold', color='#264653')
 
 plot_stacked_cobertura(ax1, df_libre, 'INGRESO LIBRE: PLAZAS CUBIERTAS vs DESIERTAS')
@@ -343,11 +344,11 @@ if os.path.exists(csv_oep):
     plt.close()
 
 # ============================================
-# 9. GRÁFICO 8 (NUEVO): CRIBA POR EJERCICIO (2018 y 2019)
+# 9. GRÁFICO 8: PROGRESIÓN Y CRIBA POR EJERCICIO (2018, 2019 y 2024)
 # ============================================
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(18, 5.5))
 
-def plot_progression_ejercicios(ax, conv_year, titulo):
+def plot_progression_ejercicios(ax, conv_year):
     r = df_libre[df_libre['convocatoria'] == conv_year].iloc[0]
     p1 = r['presentados_1ej_total']
     s1 = r['superan_1ej_total']
@@ -357,47 +358,72 @@ def plot_progression_ejercicios(ax, conv_year, titulo):
     s2 = r['superan_2ej_total']
     c2 = p2 - s2
     
-    stages = ['1º Ejercicio\n(Presentados)', 'Superan 1º Ej\n(Aprobados Test)', '2º Ejercicio\n(Presentados)', 'Superan 2º Ej\n(Plaza Final)']
+    stages = ['1º Ej (Test)\nPresentados', 'Superan 1º\nAprobados', '2º Ej (Práct.)\nPresentados', 'Superan 2º\nPlaza Final']
     vals = [p1, s1, p2, s2]
     colors = ['#1D3557', '#457B9D', '#2A9D8F', '#E76F51']
     bars = ax.bar(stages, vals, color=colors, width=0.55, edgecolor='white', linewidth=1.5)
     
     ax.set_title(f'Convocatoria {conv_year} (OEP {r["oep"]})\nPlazas: {r["plazas_totales"]} | Solicitudes: {r["solicitudes_total"]}', 
-                 fontsize=12, fontweight='bold', pad=15)
-    ax.set_ylabel('Número de Opositores', fontsize=11, fontweight='bold')
+                 fontsize=11, fontweight='bold', pad=12)
+    ax.set_ylabel('Número de Opositores', fontsize=10, fontweight='bold')
     ax.grid(True, alpha=0.3, axis='y')
     ax.set_ylim(0, p1 * 1.25)
     
     for bar in bars:
         h = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2., h + (p1*0.02), f'{int(h)}', 
-                ha='center', va='bottom', fontsize=10, fontweight='bold')
+                ha='center', va='bottom', fontsize=9, fontweight='bold')
     
-    ax.annotate(f'Cae el {c1/p1*100:.1f}%\n({int(c1)} suspensos)', 
-                xy=(0.5, (p1 + s1)/2), xytext=(0.5, p1*0.85),
-                ha='center', fontsize=9, fontweight='bold', color='#E63946',
-                bbox=dict(boxstyle="round,pad=0.3", fc="#FFF0F0", ec="#E63946", lw=1))
+    ax.annotate(f'Cae: {c1/p1*100:.1f}%\n({int(c1)} susp.)', 
+                xy=(0.5, (p1 + s1)/2), xytext=(0.5, p1*0.82),
+                ha='center', fontsize=8, fontweight='bold', color='#E63946',
+                bbox=dict(boxstyle="round,pad=0.2", fc="#FFF0F0", ec="#E63946", lw=1))
     
-    ax.annotate(f'Abandono: {aban_2/s1*100:.1f}%\n({int(aban_2)} no van al 2º)', 
-                xy=(1.5, (s1 + p2)/2), xytext=(1.5, p1*0.65),
-                ha='center', fontsize=9, fontweight='bold', color='#D97706',
-                bbox=dict(boxstyle="round,pad=0.3", fc="#FFFBEB", ec="#D97706", lw=1))
+    ax.annotate(f'Abandono: {aban_2/s1*100:.1f}%\n({int(aban_2)} no van)', 
+                xy=(1.5, (s1 + p2)/2), xytext=(1.5, p1*0.62),
+                ha='center', fontsize=8, fontweight='bold', color='#D97706',
+                bbox=dict(boxstyle="round,pad=0.2", fc="#FFFBEB", ec="#D97706", lw=1))
     
-    ax.annotate(f'Cae el {c2/p2*100:.1f}%\n({int(c2)} suspensos)', 
-                xy=(2.5, (p2 + s2)/2), xytext=(2.5, p1*0.45),
-                ha='center', fontsize=9, fontweight='bold', color='#E63946',
-                bbox=dict(boxstyle="round,pad=0.3", fc="#FFF0F0", ec="#E63946", lw=1))
+    ax.annotate(f'Cae: {c2/p2*100:.1f}%\n({int(c2)} susp.)', 
+                xy=(2.5, (p2 + s2)/2), xytext=(2.5, p1*0.42),
+                ha='center', fontsize=8, fontweight='bold', color='#E63946',
+                bbox=dict(boxstyle="round,pad=0.2", fc="#FFF0F0", ec="#E63946", lw=1))
 
-plot_progression_ejercicios(ax1, 2018, 'Criba Ejercicio a Ejercicio - 2018')
-plot_progression_ejercicios(ax2, 2019, 'Criba Ejercicio a Ejercicio - 2019')
+plot_progression_ejercicios(ax1, 2018)
+plot_progression_ejercicios(ax2, 2019)
 
-plt.suptitle('INGRESO LIBRE: ANÁLISIS DE CRIBA POR EJERCICIO (MODELO DE EXÁMENES SEPARADOS)', fontsize=14, fontweight='bold', y=1.02)
+# Panel 3: Convocatoria 2024 (Examen Único: Presentados 1º Ej vs Superan Proceso)
+r24 = df_libre[df_libre['convocatoria'] == 2024].iloc[0]
+p24 = r24['presentados_1ej_total']
+aprob24 = r24['superan_proceso_total']
+caen24 = p24 - aprob24
+stages_24 = ['1º Ejercicio\n(Presentados)', 'Superan Proceso\n(Aprobados Plaza)', 'No Superan\n(Caen en pruebas)']
+vals_24 = [p24, aprob24, caen24]
+colors_24 = ['#1D3557', '#2A9D8F', '#E76F51']
+
+bars24 = ax3.bar(stages_24, vals_24, color=colors_24, width=0.55, edgecolor='white', linewidth=1.5)
+ax3.set_title(f'Convocatoria 2024 (Examen Único)\nPlazas: 995 | Solicitudes: 2.482', fontsize=11, fontweight='bold', pad=12)
+ax3.set_ylabel('Número de Opositores', fontsize=10, fontweight='bold')
+ax3.grid(True, alpha=0.3, axis='y')
+ax3.set_ylim(0, p24 * 1.25)
+
+for bar in bars24:
+    h = bar.get_height()
+    pct = h / p24 * 100
+    ax3.text(bar.get_x() + bar.get_width()/2., h + (p24*0.02), f'{int(h)}\n({pct:.1f}%)', 
+             ha='center', va='bottom', fontsize=9, fontweight='bold')
+
+ax3.annotate(f'Superan: 39.7%\nCaen: 60.3%', xy=(1.5, p24*0.65), xytext=(1.5, p24*0.8),
+             ha='center', fontsize=9, fontweight='bold', color='#1D3557',
+             bbox=dict(boxstyle="round,pad=0.3", fc="#EAF2F8", ec="#1D3557", lw=1))
+
+plt.suptitle('INGRESO LIBRE: PROGRESIÓN Y CRIBA POR EJERCICIO (2018, 2019 Y 2024)', fontsize=14, fontweight='bold', y=1.02)
 plt.tight_layout()
 plt.savefig('08_ingreso_libre_criba_por_ejercicio.png', dpi=150, bbox_inches='tight')
 plt.close()
 
 # ============================================
-# 10. GRÁFICO 9 (NUEVO): DESTINO DE CANDIDATOS (CONVOCATORIA E HISTÓRICO)
+# 10. GRÁFICO 9: DESTINO DE CANDIDATOS (CONVOCATORIA E HISTÓRICO)
 # ============================================
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
 
@@ -464,31 +490,100 @@ plt.savefig('09_ingreso_libre_destino_candidatos_historico.png', dpi=150, bbox_i
 plt.close()
 
 # ============================================
-# 11. RESUMEN EJECUTIVO EN CONSOLA
+# 11. GRÁFICO 10 (NUEVO): BALANCE DE TODAS LAS PLAZAS CONVOCADAS VS DESIERTAS (2024 Y TOTAL)
+# ============================================
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 5.5))
+
+# Panel 1: Convocatoria 2024 (Libre, Promo y Total)
+cats_2024 = ['Ingreso Libre\n(2024)', 'Promoción Interna\n(2024)', 'TOTAL GSI\n(2024)']
+plz_conv_2024 = [995, 800, 1795]
+plz_cub_2024 = [410, 162, 572]
+plz_des_2024 = [585, 638, 1223]
+pct_des_2024 = [585/995*100, 638/800*100, 1223/1795*100]
+
+b_cub_24 = ax1.bar(cats_2024, plz_cub_2024, width=0.55, label='Plazas Cubiertas', color='#2A9D8F', alpha=0.9)
+b_des_24 = ax1.bar(cats_2024, plz_des_2024, width=0.55, bottom=plz_cub_2024, label='Plazas Desiertas', color='#E76F51', alpha=0.85)
+
+ax1.set_title('Convocatoria 2024: Plazas Cubiertas vs Desiertas', fontsize=12, fontweight='bold', pad=12)
+ax1.set_ylabel('Número de Plazas', fontsize=11, fontweight='bold')
+ax1.legend(fontsize=10)
+ax1.grid(True, alpha=0.3, axis='y')
+ax1.set_ylim(0, 2200)
+
+for i in range(len(cats_2024)):
+    ax1.text(i, plz_conv_2024[i] + 40, f'Convocadas: {plz_conv_2024[i]}\nDesiertas: {plz_des_2024[i]} ({pct_des_2024[i]:.1f}%)',
+             ha='center', va='bottom', fontsize=9.5, fontweight='bold', color='#264653')
+    ax1.text(i, plz_cub_2024[i]/2, f'{plz_cub_2024[i]}', ha='center', va='center', color='white', fontweight='bold', fontsize=10)
+    ax1.text(i, plz_cub_2024[i] + plz_des_2024[i]/2, f'{plz_des_2024[i]}', ha='center', va='center', color='white', fontweight='bold', fontsize=10)
+
+# Panel 2: Evolución de Plazas Desiertas por Convocatoria (Total GSI: Libre + Promo)
+conv_all = ['2018', '2019', '2022', '2024']
+total_plazas_yr = [358, 480, 1440, 1795]
+total_cubiertas_yr = [175, 254, 459, 572]
+total_desiertas_yr = [183, 226, 981, 1223]
+pct_des_yr = [183/358*100, 226/480*100, 981/1440*100, 1223/1795*100]
+
+b_cub_yr = ax2.bar(conv_all, total_cubiertas_yr, width=0.55, label='Plazas Cubiertas (Total GSI)', color='#2A9D8F', alpha=0.9)
+b_des_yr = ax2.bar(conv_all, total_desiertas_yr, width=0.55, bottom=total_cubiertas_yr, label='Plazas Desiertas (Total GSI)', color='#E76F51', alpha=0.85)
+
+ax2.set_title('Evolución Histórica de Plazas Desiertas (Total GSI: Libre + Promo)', fontsize=12, fontweight='bold', pad=12)
+ax2.set_xlabel('Convocatoria', fontsize=11, fontweight='bold')
+ax2.set_ylabel('Número de Plazas', fontsize=11, fontweight='bold')
+ax2.legend(fontsize=10)
+ax2.grid(True, alpha=0.3, axis='y')
+ax2.set_ylim(0, 2200)
+
+for i in range(len(conv_all)):
+    ax2.text(i, total_plazas_yr[i] + 40, f'{total_desiertas_yr[i]} desiertas\n({pct_des_yr[i]:.1f}%)',
+             ha='center', va='bottom', fontsize=9.5, fontweight='bold', color='#E63946')
+    ax2.text(i, total_cubiertas_yr[i]/2, f'{total_cubiertas_yr[i]}', ha='center', va='center', color='white', fontweight='bold', fontsize=9)
+    ax2.text(i, total_cubiertas_yr[i] + total_desiertas_yr[i]/2, f'{total_desiertas_yr[i]}', ha='center', va='center', color='white', fontweight='bold', fontsize=9)
+
+plt.suptitle('RADIOGRAFÍA DE PLAZAS DESIERTAS: EN 2024 EL 68.1% DE LAS PLAZAS QUEDARON VACÍAS', fontsize=14, fontweight='bold', y=1.02)
+plt.tight_layout()
+plt.savefig('10_resumen_plazas_desiertas_todas.png', dpi=150, bbox_inches='tight')
+plt.close()
+
+# ============================================
+# 12. RESUMEN EJECUTIVO EN CONSOLA
 # ============================================
 print("\n" + "="*80)
 print("INFORME ESTADÍSTICO AUDITADO Y VERIFICADO - GSI AGE (2018-2024)")
 print("="*80)
 
-print("\n📊 INGRESO LIBRE - RESUMEN CONVOCATORIA 2024:")
-r24 = df_libre[df_libre['convocatoria'] == 2024].iloc[0]
-print(f"   • Plazas convocadas: {r24['plazas_totales']} (General: {r24['plazas_general']}, Discapacidad: {r24['plazas_discapacidad']})")
-print(f"   • Solicitudes: {r24['solicitudes_total']} -> Admitidos: {r24['admitidos_total']} ({r24['solicitudes_total'] - r24['admitidos_total']} excluidos)")
-print(f"   • Presentados reales: {r24['presentados_1ej_total']} (Absentismo pre-examen: {r24['tasa_abandono']}%)")
-print(f"   • Ratio real el día del examen: {r24['ratio_presentados_plaza']} presentados por plaza (vs {r24['ratio_solicitudes_plaza']} solicitudes/plaza)")
-print(f"   • Aprobados totales: {r24['superan_proceso_total']} ({r24['tasa_exito_global']}% de los presentados)")
-print(f"   • Plazas desiertas: {r24['plazas_desiertas']} de {r24['plazas_totales']} ({100 - r24['tasa_cobertura']:.1f}% desiertas)")
+print("\n📊 1. CONVOCATORIA 2024 - PRESENTADOS 1º EJERCICIO vs SUPERAN PROCESO COMPLETO:")
+print(f"   • INGRESO LIBRE TOTAL: 1.033 se presentaron al 1er Ejercicio.")
+print(f"     - Superan el proceso completo: 410 (39.69% de los presentados)")
+print(f"     - No superan / Caen en las pruebas: 623 (60.31% de los presentados)")
+print(f"     - Cupo General: 1.004 presentados -> 397 superan (39.54%) | 607 caen (60.46%)")
+print(f"     - Cupo Discapacidad (CRD): 29 presentados -> 13 superan (44.83%) | 16 caen (55.17%)")
+print(f"   • PROMOCIÓN INTERNA TOTAL: 186 se presentaron al 1er Ejercicio.")
+print(f"     - Superan el proceso completo: 162 (87.10% de los presentados)")
+print(f"     - No superan / Caen: 24 (12.90% de los presentados)")
+print(f"   • TOTAL GSI 2024: 1.219 se presentaron al 1er Ejercicio.")
+print(f"     - Superan el proceso completo: 572 (46.92% de los presentados)")
+print(f"     - No superan / Caen: 647 (53.08% de los presentados)")
 
-print("\n📈 PROGRESIÓN Y CRIBA DETALLADA POR EJERCICIO (2018 y 2019):")
-print("   • En 2018: 1.027 se presentan al 1º Ej -> 500 superan (48.7%) -> 150 abandonan antes del 2º Ej (30.0%) -> 350 van al 2º Ej -> 144 aprueban (41.1%).")
-print("   • En 2019: 719 se presentan al 1º Ej -> 350 superan (48.7%) -> 89 abandonan antes del 2º Ej (25.4%) -> 261 van al 2º Ej -> 143 aprueban (54.8%).")
-print("   • Criba fija en el 1er ejercicio (test): ~51.3% de suspensos en ambas convocatorias.")
+print("\n📉 2. PLAZAS DESIERTAS CONVOCATORIA 2024 (DE TODAS LAS CONVOCADAS ESE AÑO):")
+print(f"   • INGRESO LIBRE 2024:")
+print(f"     - Plazas convocadas: 995 (General: 937, Discapacidad: 58)")
+print(f"     - Plazas cubiertas: 410 (General: 397, Discapacidad: 13)")
+print(f"     - PLAZAS DESIERTAS: 585 plazas desiertas (58.79% sin cubrir)")
+print(f"       * Cupo General: 540 plazas desiertas de 937 (57.63%)")
+print(f"       * Cupo Discapacidad: 45 plazas desiertas de 58 (77.59%)")
+print(f"   • PROMOCIÓN INTERNA 2024:")
+print(f"     - Plazas convocadas: 800 (General: 754, Discapacidad: 46)")
+print(f"     - Plazas cubiertas: 162 (General: 155, Discapacidad: 7)")
+print(f"     - PLAZAS DESIERTAS: 638 plazas desiertas (79.75% sin cubrir)")
+print(f"   • TOTAL GSI 2024 (Libre + Promo):")
+print(f"     - Plazas convocadas: 1.795 plazas")
+print(f"     - Plazas cubiertas: 572 plazas")
+print(f"     - TOTAL PLAZAS DESIERTAS 2024: ¡1.223 PLAZAS DESIERTAS (el 68.13% de todas las plazas convocadas)!")
 
-print("\n🏛️ BALANCE HISTÓRICO GLOBAL (2018-2024):")
-print(f"   • Solicitudes totales registradas: {tot_sol:,}")
-print(f"   • Abandonan antes del examen (Absentismo): {tot_no_pres:,} ({tot_no_pres/tot_sol*100:.1f}%)")
-print(f"   • Se presentan pero suspenden/caen en las pruebas: {tot_susp:,} ({tot_susp/tot_sol*100:.1f}% de solicitudes, {tot_susp/tot_p1*100:.1f}% de presentados)")
-print(f"   • Superan el proceso y obtienen plaza fija: {tot_aprob:,} ({tot_aprob/tot_sol*100:.1f}% de solicitudes, {tot_aprob/tot_p1*100:.1f}% de presentados)")
+print("\n🏛️ 3. TOTAL HISTÓRICO ACUMULADO (2018-2024):")
+print(f"   • Ingreso Libre: 1.320 plazas desiertas de 2.333 convocadas (56.58% desiertas)")
+print(f"   • Promoción Interna: 1.293 plazas desiertas de 1.740 convocadas (74.31% desiertas)")
+print(f"   • TOTAL GSI HISTÓRICO: 2.613 plazas desiertas de 4.073 convocadas (64.15% desiertas)")
 
 print("\n" + "="*80)
 print("✅ Todos los gráficos actualizados y guardados como PNG:")
@@ -499,6 +594,7 @@ print("   - 04_embudo_conversion.png")
 print("   - 05_tasa_presentacion.png")
 print("   - 06_ingreso_libre_general_vs_discapacidad.png")
 print("   - 07_ingreso_libre_oeps_acumuladas.png")
-print("   - 08_ingreso_libre_criba_por_ejercicio.png  (NUEVO)")
-print("   - 09_ingreso_libre_destino_candidatos_historico.png  (NUEVO)")
+print("   - 08_ingreso_libre_criba_por_ejercicio.png")
+print("   - 09_ingreso_libre_destino_candidatos_historico.png")
+print("   - 10_resumen_plazas_desiertas_todas.png  (NUEVO)")
 print("="*80)

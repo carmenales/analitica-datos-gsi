@@ -122,21 +122,44 @@ Analizando las **8.580 solicitudes** totales de Ingreso Libre en las 4 convocato
 
 ---
 
-## 7. Hallazgos Clave para el Opositor de Ingreso Libre
+## 7. Radiografía de Plazas Desiertas: ¿Cuántas plazas se quedan desiertas de todas las convocadas ese año?
 
-1. **La Competencia Real es de 1 a 1:**
-   - La competencia real se ha reducido drásticamente: de 4.71 presentados/plaza en 2018 a solo **1.04 en 2024**.
-2. **El Verdadero Rival no son los demás opositores:**
-   - En 2024, a pesar de haber 1.033 personas examinándose para 995 plazas, quedaron **585 plazas desiertas**.
-   - El motivo: los aspirantes no superan la nota mínima de corte legal (50% de la puntuación). Quien supera el corte obtiene plaza.
-3. **El Efecto Filtro del Absentismo:**
-   - Más del 50% (53.4% histórico) de las personas inscritas no acuden al aula el día del examen.
+| Convocatoria | Modalidad | Plazas Convocadas | Plazas Cubiertas | Plazas Desiertas | % Desiertas |
+|:---:|:---|:---:|:---:|:---:|:---:|
+| **2024** | **Ingreso Libre** | **995** (937 Gen + 58 Disc) | **410** (397 Gen + 13 Disc) | **585** (540 Gen + 45 Disc) | **58.79%** |
+| **2024** | **Promoción Interna** | **800** (754 Gen + 46 Disc) | **162** (155 Gen + 7 Disc) | **638** (599 Gen + 39 Disc) | **79.75%** |
+| **2024** | **TOTAL GSI CONVOCATORIA** | **1.795** (1.691 Gen + 104 Disc) | **572** (552 Gen + 20 Disc) | **1.223** (1.139 Gen + 84 Disc) | **68.13%** |
+| **2022** | TOTAL GSI CONVOCATORIA | 1.440 | 459 | 981 | 68.13% |
+| **2019** | TOTAL GSI CONVOCATORIA | 480 | 254 | 226 | 47.08% |
+| **2018** | TOTAL GSI CONVOCATORIA | 358 | 175 | 183 | 51.12% |
+| **TOTAL** | **HISTÓRICO ACUMULADO GSI** | **4.073** | **1.460** | **2.613** | **64.15%** |
+
+> [!CAUTION]
+> En la convocatoria de **2024 se quedaron desiertas 1.223 plazas de las 1.795 convocadas (el 68.13%)**. En el histórico acumulado de 2018 a 2024, **casi dos tercios (64.15%) de todas las plazas de GSI convocadas por el Estado han quedado vacías**.
 
 ---
 
-## 8. Archivos y Recursos en el Repositorio
+## 8. Hallazgos Clave para el Opositor de Ingreso Libre
 
-- `analisis_gsi.py`: Script Python modular que carga los CSVs y genera los 9 gráficos.
+1. **Presentados al 1er Ejercicio vs Superan Proceso en 2024:**
+   - De **1.033 presentados**, **410 superaron el proceso completo (39.69%)** y **623 cayeron (60.31%)**.
+   - En cupo General: **39.54%** superan (397 de 1.004) y 60.46% caen (607).
+   - En cupo Discapacidad: **44.83%** superan (13 de 29) y 55.17% caen (16).
+2. **Plazas Desiertas en 2024:**
+   - En Ingreso Libre quedaron **585 plazas desiertas (58.79%)** de las 995 ofertadas.
+   - En total (Libre + Promo) quedaron **1.223 plazas desiertas (68.13%)** de las 1.795 convocadas.
+3. **La Competencia Real es de 1 a 1:**
+   - En 2024 hubo prácticamente una plaza por cada opositor que acudió al examen (**ratio 1.04 presentados por plaza**).
+4. **El Verdadero Rival no son los demás opositores:**
+   - El motivo de tantas plazas desiertas es que los aspirantes no alcanzan el corte mínimo legal del 50%. Quien supera el listón mínimo del Tribunal obtiene plaza fija.
+5. **El Filtro del Absentismo:**
+   - El **53.4%** de las personas inscritas históricamente abandona antes de entrar al aula.
+
+---
+
+## 9. Archivos y Recursos en el Repositorio
+
+- `analisis_gsi.py`: Script Python modular que carga los CSVs y genera los 10 gráficos.
 - `analisis_oposiciones_gsi_age.ipynb`: Cuaderno Jupyter interactivo completamente ejecutado con todos los gráficos y tablas.
 - `gsi_datos_completos.csv`: Dataset maestro con el histórico auditado 2018-2024.
 - `gsi_ingreso_libre_analisis.csv`: Dataset enfocado en Ingreso Libre.
@@ -151,5 +174,6 @@ Analizando las **8.580 solicitudes** totales de Ingreso Libre en las 4 convocato
   - `05_tasa_presentacion.png`: Tasa de Presentación vs Absentismo.
   - `06_ingreso_libre_general_vs_discapacidad.png`: Cobertura General vs Discapacidad.
   - `07_ingreso_libre_oeps_acumuladas.png`: Asignación de plazas por año de OEP.
-  - `08_ingreso_libre_criba_por_ejercicio.png`: Criba ejercicio a ejercicio y abandono inter-examen.
+  - `08_ingreso_libre_criba_por_ejercicio.png`: Criba ejercicio a ejercicio (2018, 2019 y 2024).
   - `09_ingreso_libre_destino_candidatos_historico.png`: Destino de los aspirantes por convocatoria e histórico global.
+  - `10_resumen_plazas_desiertas_todas.png`: Resumen total de plazas convocadas vs desiertas (2024 e histórico).
